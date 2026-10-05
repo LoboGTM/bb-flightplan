@@ -74,16 +74,17 @@ body{
 .rule{flex:1;height:1px;background:var(--line);min-width:20px}
 
 /* ---- runway ---- */
-.runway{border:1px solid var(--line);background:var(--panel);overflow-x:auto}
-.runway-inner{min-width:760px;padding:18px 20px 20px}
-.months{display:grid;grid-template-columns:repeat(14,1fr);font-family:var(--font-mono);
+.runway{border:1px solid var(--line);background:var(--panel);padding:18px 20px 20px}
+.rwgrid{display:grid;grid-template-columns:160px 1fr;gap:0 14px;align-items:center}
+.rwgrid > .spacer{grid-column:1}
+.months{display:grid;grid-template-columns:repeat(4,1fr);font-family:var(--font-mono);
   font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;
-  border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:14px}
-.months span{grid-column:span 2;text-align:left}
-.lane{display:grid;grid-template-columns:168px 1fr;align-items:center;gap:14px;margin-bottom:9px}
-.lane-n{font-size:12.5px;color:var(--muted);text-align:right;line-height:1.3}
-.track{position:relative;height:21px;background:
-  repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px calc(100%/7))}
+  border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:12px}
+.rwgrid > .months{grid-column:2}
+.lane-n{font-size:12.5px;color:var(--muted);text-align:right;line-height:1.3;
+  padding:5px 0;grid-column:1}
+.track{position:relative;height:21px;margin:5px 0;grid-column:2;background:
+  repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 25%)}
 .bar{position:absolute;top:3px;height:15px;border-radius:2px;display:flex;align-items:center;
   padding:0 8px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;
   color:#06111C;font-weight:700;white-space:nowrap;overflow:hidden}
@@ -91,16 +92,26 @@ body{
 .b-live{background:linear-gradient(90deg,#2E9BFF,#7CC4FF)}
 .b-gold{background:linear-gradient(90deg,#C8912F,#F0B94B)}
 .b-open{background:transparent;border:1px dashed var(--dim);color:var(--muted);font-weight:500}
-.today{position:absolute;top:-4px;bottom:-4px;width:1px;background:var(--gold);z-index:3}
-.today::after{content:"TODAY";position:absolute;top:-15px;left:-15px;font-family:var(--font-mono);
+.today{position:absolute;top:-5px;bottom:-5px;width:1px;background:var(--gold);z-index:3}
+.today.lab::after{content:"TODAY";position:absolute;top:-16px;left:-15px;font-family:var(--font-mono);
   font-size:8.5px;letter-spacing:.12em;color:var(--gold)}
-.marks{display:grid;grid-template-columns:168px 1fr;gap:14px;margin-top:14px;
+.marks{grid-column:2;position:relative;height:30px;margin-top:12px;
   border-top:1px solid var(--line);padding-top:12px}
-.marks-l{text-align:right;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--dim)}
-.marks-r{position:relative;height:26px}
-.mk{position:absolute;top:0;font-family:var(--font-mono);font-size:9.5px;color:var(--muted);
-  border-left:1px solid var(--dim);padding-left:6px;line-height:1.25;max-width:120px}
+.marks-l{grid-column:1;text-align:right;font-family:var(--font-mono);font-size:9.5px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--dim);
+  margin-top:12px;padding-top:12px}
+.mk{position:absolute;top:12px;font-family:var(--font-mono);font-size:9.5px;color:var(--muted);
+  border-left:1px solid var(--dim);padding-left:6px;line-height:1.25;max-width:118px}
+
+/* phone: the gantt becomes a list, because a 4-month timeline at 360px is unreadable */
+.rwlist{display:none;flex-direction:column}
+.rwlist li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;
+  padding:11px 0;border-bottom:1px solid rgba(27,39,51,.6);list-style:none}
+.rwlist li:last-child{border-bottom:0}
+.rwlist .n{font-size:14px;font-weight:500;flex:1 1 auto;min-width:0}
+.rwlist .w{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);
+  letter-spacing:.06em;flex:1 0 100%}
+.rwlist ul{margin:0;padding:0}
 
 /* ---- workstreams ---- */
 .ws{border:1px solid var(--line);background:var(--panel)}
@@ -136,6 +147,10 @@ body{
 .panel li:last-child{border-bottom:0}
 .panel li .m{display:block;font-family:var(--font-mono);font-size:10px;color:var(--dim);
   letter-spacing:.07em;margin-top:4px;text-transform:uppercase}
+.p-extra{background:rgba(240,185,75,.12);color:var(--gold);border-color:rgba(240,185,75,.35)}
+.res td a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dim)}
+.res td a:hover{border-bottom-color:var(--accent)}
+.res tr.grp td{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding-top:16px;border-bottom:1px solid var(--line)}
 .panel li.flag{background:rgba(255,95,86,.06);border-left:2px solid var(--crit);padding-left:14px}
 .panel li.flag .m{color:var(--crit)}
 
@@ -183,8 +198,24 @@ td .sm{display:block;font-size:12px;color:var(--dim);margin-top:2px}
   .wrap{padding-block:22px 56px}
   .ws-row{grid-template-columns:1fr 100px;gap:10px}
   .ws-o,.chev{display:none}
-  .lane,.marks{grid-template-columns:110px 1fr;gap:10px}
+  .rwgrid{display:none}
+  .rwlist{display:flex}
+  .runway{padding:4px 16px 10px}
+  /* ledger: stack instead of scrolling the amounts off screen */
+  .ledger{overflow-x:visible}
+  .ledger table{min-width:0;display:block}
+  .ledger thead{display:none}
+  .ledger tbody,.ledger tr{display:block;width:100%}
+  .ledger tr{border-bottom:1px solid var(--line);padding:13px 16px}
+  .ledger tbody tr:last-child{border-bottom:0}
+  .ledger td{display:block;border:0;padding:0}
+  .ledger td:nth-child(2){margin-top:9px}
+  .ledger td.num{text-align:left;margin-top:7px;font-size:17px;font-weight:600;color:var(--fg)}
+}
+@media (max-width:820px) and (min-width:621px){
+  .rwgrid{grid-template-columns:118px 1fr;gap:0 10px}
   .lane-n{font-size:11.5px}
+  .bar{font-size:8.5px;padding:0 5px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -232,49 +263,43 @@ td .sm{display:block;font-size:12px;color:var(--dim);margin-top:2px}
     <div class="sec-h"><h2>Launch runway</h2><div class="rule"></div>
       <div class="note">Pax8 quotes 8&ndash;10 weeks from business kickoff. Dates past Oct are planned, not confirmed.</div></div>
     <div class="runway">
-      <div class="runway-inner">
+      <div class="rwgrid">
+        <div class="spacer"></div>
         <div class="months"><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div>
-
-        <div class="lane"><div class="lane-n">Enablement kit</div>
-          <div class="track"><div class="bar b-done" style="left:13.3%;width:13.4%">DONE</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">Pax8 vendor forms</div>
-          <div class="track"><div class="bar b-gold" style="left:18.1%;width:18.1%">V3 &rarr; REVIEW</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">Bumblebee Buddy</div>
-          <div class="track"><div class="bar b-live" style="left:21.9%;width:20%">V1 LIVE</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">Marketplace content<br>&amp; video</div>
-          <div class="track"><div class="bar b-live" style="left:8.6%;width:55.2%">IN FLIGHT</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">Integration &amp; metering</div>
-          <div class="track"><div class="bar b-live" style="left:13.3%;width:43.8%">BUMBLEBEE + GRAHAM</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">Rep &amp; SC training</div>
-          <div class="track"><div class="bar b-open" style="left:58.1%;width:11.4%">PHASE 2</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">Gated pilot</div>
-          <div class="track"><div class="bar b-open" style="left:72.4%;width:14.3%">2 WEEKS</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
-        <div class="lane"><div class="lane-n">General availability</div>
-          <div class="track"><div class="bar b-open" style="left:86.7%;width:13.3%">GA</div>
-          <div class="today" style="left:28.6%"></div></div></div>
-
+          <div class="lane-n">Enablement kit</div>
+          <div class="track"><div class="bar b-done" style="left:13.3%;width:13.4%">DONE</div><div class="today lab" style="left:28.6%"></div></div>
+          <div class="lane-n">Pax8 vendor forms</div>
+          <div class="track"><div class="bar b-gold" style="left:18.1%;width:18.1%">V3 &rarr; REVIEW</div><div class="today" style="left:28.6%"></div></div>
+          <div class="lane-n">Bumblebee Buddy</div>
+          <div class="track"><div class="bar b-live" style="left:21.9%;width:20.0%">V1 LIVE</div><div class="today" style="left:28.6%"></div></div>
+          <div class="lane-n">Marketplace content<br>&amp; video</div>
+          <div class="track"><div class="bar b-live" style="left:8.6%;width:55.2%">IN FLIGHT</div><div class="today" style="left:28.6%"></div></div>
+          <div class="lane-n">Integration &amp; metering</div>
+          <div class="track"><div class="bar b-live" style="left:13.3%;width:43.8%">BUMBLEBEE + GRAHAM</div><div class="today" style="left:28.6%"></div></div>
+          <div class="lane-n">Rep &amp; SC training</div>
+          <div class="track"><div class="bar b-open" style="left:58.1%;width:11.4%">PHASE 2</div><div class="today" style="left:28.6%"></div></div>
+          <div class="lane-n">Gated pilot</div>
+          <div class="track"><div class="bar b-open" style="left:72.4%;width:14.3%">2 WEEKS</div><div class="today" style="left:28.6%"></div></div>
+          <div class="lane-n">General availability</div>
+          <div class="track"><div class="bar b-open" style="left:86.7%;width:13.3%">GA</div><div class="today" style="left:28.6%"></div></div>
+        <div class="marks-l">Fixed points</div>
         <div class="marks">
-          <div class="marks-l">Fixed points</div>
-          <div class="marks-r">
-            <div class="mk" style="left:13.3%">Sep 15<br>Pax8 kickoff</div>
-            <div class="mk" style="left:34.3%">Oct<br>Beyond Copenhagen</div>
-            <div class="mk" style="left:72.4%">Nov 17<br>Pilot target</div>
-          </div>
+          <div class="mk" style="left:13.3%">Sep 15<br>Pax8 kickoff</div>
+          <div class="mk" style="left:34.3%">Oct<br>Beyond Copenhagen</div>
+          <div class="mk" style="left:72.4%">Nov 17<br>Pilot target</div>
         </div>
+      </div>
+      <div class="rwlist">
+        <ul>
+            <li><span class="n">Enablement kit</span><span class="pill p-done">DONE</span><span class="w">Sep 15 – Sep 29</span></li>
+            <li><span class="n">Pax8 vendor forms</span><span class="pill p-wait">V3 &rarr; REVIEW</span><span class="w">Sep 20 – Oct 8</span></li>
+            <li><span class="n">Bumblebee Buddy</span><span class="pill p-live">V1 LIVE</span><span class="w">Sep 24 – Oct 15</span></li>
+            <li><span class="n">Marketplace content &amp; video</span><span class="pill p-live">IN FLIGHT</span><span class="w">Sep 10 – Nov 7</span></li>
+            <li><span class="n">Integration &amp; metering</span><span class="pill p-live">BUMBLEBEE + GRAHAM</span><span class="w">Sep 15 – Oct 31</span></li>
+            <li><span class="n">Rep &amp; SC training</span><span class="pill p-open">PHASE 2</span><span class="w">Nov 1 – Nov 14</span></li>
+            <li><span class="n">Gated pilot</span><span class="pill p-open">2 WEEKS</span><span class="w">Nov 17 – Dec 1</span></li>
+            <li><span class="n">General availability</span><span class="pill p-open">GA</span><span class="w">From Dec 1</span></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -295,8 +320,8 @@ td .sm{display:block;font-size:12px;color:var(--dim);margin-top:2px}
           <li>Battlecards and objection handling<span class="m">BrightGauge, ScalePad, Rewst</span></li>
           <li>Why MSPs Buy This<span class="m">Rep-safe cut of the PAS sheet</span></li>
           <li>PAS sheet v5<span class="m">Internal working doc with Hexi</span></li>
-          <li>Pax8 vendor forms, v3 draft<span class="m">Sales info + marketplace content</span></li>
-          <li>Bumblebee Buddy v1 + user guide<span class="m">Deployed on Netlify &middot; Sep 29</span></li>
+          <li>Pax8 vendor forms, v3<span class="m">Pax8&rsquo;s format &middot; live Google Docs in pax8listing &middot; Oct 5</span></li>
+          <li>Bumblebee Buddy + user guide<span class="m">On Channel Buddy &middot; Hexi has admin &middot; Oct 2</span></li>
         </ul>
       </div>
       <div class="panel">
@@ -323,13 +348,50 @@ td .sm{display:block;font-size:12px;color:var(--dim);margin-top:2px}
     </div>
   </section>
 
+
+  <section class="sec">
+    <div class="sec-h"><h2>Resources</h2><div class="rule"></div><div class="note">Everything built so far, and which line of work paid for it</div></div>
+    <div class="ledger res">
+      <table>
+        <thead><tr><th>Resource</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="2">Rep enablement</td></tr>
+          <tr><td><a href="https://drive.google.com/drive/folders/1lbb8ChxRsY7KzJY-cL96M6S9kM8PIxwS" target="_blank" rel="noopener">Bumblebee Pax8 Kit &mdash; shared Drive folder</a><span class="sm">Every kit document lives here, Hexi has edit access. Source of truth; the links below point into it.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr><td><a href="https://drive.google.com/file/d/1CvrxblstUJdK5adcvf7DGCUHgfpszNZr/view" target="_blank" rel="noopener">Rep cheat sheet</a><span class="sm">One page. Who fits, what to listen for, how to hand off.</span></td><td><span class="pill p-done">SOW-002 Core</span></td></tr>
+          <tr><td><a href="https://drive.google.com/file/d/1-7F0Lyo8Sqt4NvCbBGPNAZQ4kQpRDxb3/view" target="_blank" rel="noopener">Discovery playbook</a><span class="sm">Qualifying questions by trigger, with the follow-up that confirms fit.</span></td><td><span class="pill p-done">SOW-002 Core</span></td></tr>
+          <tr><td><a href="https://drive.google.com/file/d/1pfldBBgHWwOjmsACPthJ0Qi4b5WumBaa/view" target="_blank" rel="noopener">Battlecards and objection handling</a><span class="sm">BrightGauge and Rewst, plus status quo and build-it-myself.</span></td><td><span class="pill p-done">SOW-002 Core</span></td></tr>
+          <tr><td><a href="https://drive.google.com/file/d/1aMcd3Sk4mTLJKMPsZSz9u2xBghTIV6s4/view" target="_blank" rel="noopener">PAS sheet v5</a><span class="sm">Internal working doc. Everything else derives from it.</span></td><td><span class="pill p-done">SOW-002 Core</span></td></tr>
+          <tr><td><a href="https://drive.google.com/file/d/1RrwcWysOYsAMIvKOGXsd7aCUloyVzZxY/view" target="_blank" rel="noopener">Why MSPs buy this</a><span class="sm">Rep-safe cut of the PAS sheet, commercial questions stripped.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr class="grp"><td colspan="2">The Buddy</td></tr>
+          <tr><td><a href="https://app.channelbuddy.ai/#/b/bumblebee" target="_blank" rel="noopener">Bumblebee Buddy &mdash; the rep link</a><span class="sm">No login. What a Pax8 rep opens on a call.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr><td><a href="https://app.channelbuddy.ai/#/vendor" target="_blank" rel="noopener">Vendor admin portal</a><span class="sm">Hexi edits any copy, question or number himself.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr><td><a href="https://bumblebee-buddy.netlify.app/userguide/" target="_blank" rel="noopener">Buddy user guide</a><span class="sm">How a rep uses it, in two minutes.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr><td><a href="https://bumblebee-buddy.netlify.app" target="_blank" rel="noopener">Buddy v1 prototype</a><span class="sm">The version Eli saw Sep 29 and took to his L10.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr class="grp"><td colspan="2">Pax8 submission</td></tr>
+          <tr><td><a href="https://docs.google.com/document/d/1cPkrYSXSNp3VrZHBq8pWSAj9obwKFR7n72ozmuJ5s84/edit" target="_blank" rel="noopener">Sales Information Collection, v3</a><span class="sm">Google Doc in pax8listing, Hexi has edit access. Pax8&rsquo;s own structure, zero open items.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr><td><a href="https://docs.google.com/document/d/1Qo1pLIQH3JhaNmiQJFQELKt4aGVnKt8ASTAef7uLJwM/edit" target="_blank" rel="noopener">Marketplace + Web Content, v3</a><span class="sm">Google Doc in pax8listing, Hexi has edit access. 17 TODOs in the Sep 11 version, three flagged decisions in this one.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+          <tr><td><a href="https://drive.google.com/drive/folders/1eK1BxAJcYLuDCOAsBiSr8lsLMJd7jmNu" target="_blank" rel="noopener">Bumblebee&rsquo;s Sep 11 originals</a><span class="sm">In the pax8listing Drive folder. Superseded by v3.</span></td><td><span class="pill p-extra">Bumblebee</span></td></tr>
+          <tr class="grp"><td colspan="2">Proof</td></tr>
+          <tr><td><a href="https://www.hirebumblebee.com/case-studies/rhodian-qbr-automation" target="_blank" rel="noopener">Rhodian Group case study</a><span class="sm">Two hours per client per quarter down to about ten minutes.</span></td><td><span class="pill p-extra">Bumblebee</span></td></tr>
+          <tr><td><a href="https://www.hirebumblebee.com/reporting/bumblebee-sample-qbr.html" target="_blank" rel="noopener">Sample QBR</a><span class="sm">What the finished artifact actually looks like.</span></td><td><span class="pill p-extra">Bumblebee</span></td></tr>
+          <tr class="grp"><td colspan="2">This board</td></tr>
+          <tr><td><a href="https://bb.lobogtm.io" target="_blank" rel="noopener">Bumblebee launch board</a><span class="sm">bb.lobogtm.io. Updated as things move.</span></td><td><span class="pill p-extra">Outside scope</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:12px 0 0;font-size:12.5px;line-height:1.55;color:var(--muted);max-width:68ch">
+      SOW-002 Core bought five deliverables. Eight of the items above sit outside it and were built anyway,
+      because the launch needed them. Noted here so the scope conversation happens on facts rather than memory.
+    </p>
+  </section>
+
   <section class="sec">
     <div class="sec-h"><h2>Commercial</h2><div class="rule"></div><div class="note">MSA executed Sept 10, 2026</div></div>
     <div class="ledger">
       <table>
         <thead><tr><th>Line</th><th>Status</th><th class="num">Amount</th></tr></thead>
         <tbody>
-          <tr><td>SOW-002 Core &mdash; Pax8 Enablement Kit<span class="sm">Cheat sheet, playbook, battlecards, PAS, forms, Buddy</span></td>
+          <tr><td>SOW-002 Core &mdash; Pax8 Enablement Kit<span class="sm">PAS sheet, cheat sheet, playbook, battlecards, objection handling</span></td>
             <td><span class="pill p-done">Paid Sep 16</span></td><td class="num">$3,500</td></tr>
           <tr><td>Advisory sync<span class="sm">Weekly working call, rolled into SOW-002</span></td>
             <td><span class="pill p-live">Active</span></td><td class="num">$500 / mo</td></tr>
@@ -368,16 +430,25 @@ const WS = [
   {id:"forms", n:"Pax8 vendor forms", d:"Sales Information Collection and Marketplace Content, rewritten to v3.",
    o:"Lobo → Hexi", s:"wait", sl:"Your review",
    body:`<h4>Where this stands</h4>
-   <p>Both forms are rewritten and sitting at v3. They are the inputs Pax8 uses to build the catalog page, the sales newsletter and the internal enablement library, so the copy in them becomes the copy their reps see.</p>
+   <p>Both forms are rewritten and sitting at v3, now as live Google Docs in your <a href="https://drive.google.com/drive/folders/1eK1BxAJcYLuDCOAsBiSr8lsLMJd7jmNu" target="_blank" rel="noopener">pax8listing</a> folder, built on Pax8's own template structure so Eli sees his questions with answers under them rather than our rewrite. You have edit access, so comment or change anything in place.</p>
+   <ul>
+   <li><a href="https://docs.google.com/document/d/1cPkrYSXSNp3VrZHBq8pWSAj9obwKFR7n72ozmuJ5s84/edit" target="_blank" rel="noopener">Sales Information Collection, v3</a></li>
+   <li><a href="https://docs.google.com/document/d/1Qo1pLIQH3JhaNmiQJFQELKt4aGVnKt8ASTAef7uLJwM/edit" target="_blank" rel="noopener">Marketplace + Web Content, v3</a></li></ul>
+   <p>They are the inputs Pax8 uses to build the catalog page, the sales newsletter and the internal enablement library, so the copy in them becomes the copy their reps see.</p>
    <h4>What changed in v3</h4><ul>
    <li>ICP rewritten around the dual value prop instead of the three-segment cut, which stopped being true after Sept 23.</li>
    <li>Positioning moved to Pax8's own Command of Message framing: grow revenue, reduce risk, gain efficiencies. Eli flagged on Sept 29 that this translates better for their sellers than the PAS language.</li>
    <li>Competitor section reworked so it is additive rather than rip-and-replace. BrightGauge is already in the ConnectWise bill.</li></ul>
    <h4>What I need from you</h4>
    <p>Read them, mark anything you disagree with, and submit to Eli. He turns feedback around in about 24 hours, so the sooner these are in, the less they sit on the critical path.</p>
-   <p>One thing to look at specifically: your original wording on sell-through reads, to a channel audience, as revenue leaving the channel. It is worth a second pass before a Pax8 rep reads it.</p>`},
+   <p>One thing to look at specifically: your original wording on sell-through reads, to a channel audience, as revenue leaving the channel. It is worth a second pass before a Pax8 rep reads it.</p>
+   <h4>Three decisions still open in the marketplace doc</h4>
+   <p>Marked NEEDS DECISION in place rather than left blank, so Eli can see them and they do not read as gaps:</p><ul>
+   <li>Who carries Tier 1 support. My read is you do, with a documented escalation path, because asking Pax8 to carry it for a team your size invites questions you do not want.</li>
+   <li>Which partner promotion runs at launch. Three options are listed.</li>
+   <li>Deal registration. Vendor Deal Explorer stays the system of record and the Buddy links out to it, but Pax8 has to confirm the process.</li></ul>`},
 
-  {id:"buddy", n:"Bumblebee Buddy", d:"Rep qualifying tool, pitch guide, resource library, user guide. Live on Netlify.",
+  {id:"buddy", n:"Bumblebee Buddy", d:"Rep qualifying tool, pitch guide, resource library, user guide. Live on Channel Buddy.",
    o:"Lobo", s:"live", sl:"In review",
    body:`<h4>Where this stands</h4>
    <p>V1 is deployed and I walked Eli through it on Sept 29. His words were that it would make everyone's life easier, and he took it into his vendor experience L10 the same afternoon. We are waiting on that read.</p>
@@ -443,7 +514,7 @@ const WS = [
    <p>General availability, an internal announcement, and a slot in the vendor monthly update that goes to all Pax8 partners. Then Eli hands us to Zach Purcell in vendor community about 30 to 60 days post-launch.</p>`},
 
   {id:"cb", n:"Channel Buddy pilot", d:"Bumblebee as tenant one on the Lobo channel enablement platform.",
-   o:"Lobo + Bumblebee", s:"wait", sl:"Needs papering",
+   o:"Lobo + Bumblebee", s:"live", sl:"Needs papering",
    body:`<h4>What this actually is</h4>
    <p>Buddy was built for Bumblebee, but it is the first tenant of a platform I am building for channel enablement generally. Running Bumblebee through it gives real usage data from real Pax8 reps, which is worth more to me than anything I could simulate.</p>
    <p>It is also worth something to you: you get the tool built out faster and further than Phase 1 paid for.</p>
